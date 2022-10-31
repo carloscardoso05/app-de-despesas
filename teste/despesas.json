@@ -1,0 +1,40 @@
+{
+  "carlos": {
+    "2022": {
+      "10": {
+        "17": [
+          {
+            "descricao": "salario",
+            "valor": 2000
+          },
+          {
+            "descricao": "supermercado ",
+            "valor": -500
+          },
+          {
+            "descricao": "contas",
+            "valor": -1000
+          }
+        ]
+      }
+    },
+    "2023": {
+      "11": {
+        "18": [
+          {
+            "valor": 3000,
+            "descricao": "salário"
+          },
+          {
+            "valor": -1500,
+            "descricao": "dívidas"
+          },
+          {
+            "valor": -700,
+            "descricao": "fatura"
+          }
+        ]
+      }
+    }
+  }
+}
