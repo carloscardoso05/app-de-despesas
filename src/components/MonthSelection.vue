@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { computed } from "@vue/reactivity";
-import { defineComponent, ref, onMounted, watch } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import {getData, userId} from "../data/userData";
 import { useDespesasStore } from "../store/index";
 

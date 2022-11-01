@@ -9,37 +9,40 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
-import router from './router';
+import { defineComponent, ref, onMounted } from "vue";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import router from "./router";
 
 export default defineComponent({
-  name: 'App',
-  data() {
-    return {
-      isLoggedIn: false,
-      auth: getAuth()
+  name: "App",
+
+  setup() {
+    const auth = ref(getAuth());
+    const isLoggedIn = ref(false);
+    
+
+    function handleSignOut() {
+      signOut(auth.value).then(() => {
+        router.push("/");
+      });
     }
-  },
-  methods: {
-    handleSignOut() {
-      signOut(this.auth).then(() => {
-        router.push('/')
-      })
-    }
-  },
-  mounted() {
-    onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        this.isLoggedIn = true;
-      } else {
-        this.isLoggedIn = false;
-      }
+
+    onMounted(() => {
+      onAuthStateChanged(auth.value, (user) => {
+        if (user) {
+          isLoggedIn.value = true;
+        } else {
+          isLoggedIn.value = false;
+        }
+      });
     });
-  }
+
+    return {
+      handleSignOut,
+      isLoggedIn,
+    };
+  },
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

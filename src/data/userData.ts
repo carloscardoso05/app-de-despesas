@@ -1,6 +1,9 @@
 import { ref, get, set, push, getDatabase } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { useDespesasStore } from "@/store";
 
-export const userId = 'moZb4Ycs9GbhY2Zo97F0WsyFA093'
+
+export const userId = getAuth().currentUser?.uid
 
 export async function getData(path: string) {
   const db = getDatabase();

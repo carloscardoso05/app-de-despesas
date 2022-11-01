@@ -12,18 +12,11 @@
 import YearSelection from "@/components/YearSelection.vue";
 import MonthSelection from "@/components/MonthSelection.vue";
 import BudgetTable from "@/components/BudgetTable.vue";
-import { defineComponent, onMounted } from "vue";
-import { getAuth } from "firebase/auth";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "HomeView",
-  components: { YearSelection, MonthSelection, BudgetTable},
-
-  setup() {
-    onMounted(() => {
-      console.log(getAuth().currentUser?.uid);
-    });
-  },
+  components: { YearSelection, MonthSelection, BudgetTable}
 });
 </script>
 

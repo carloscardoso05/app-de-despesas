@@ -1,70 +1,84 @@
 <template>
   <h1>Acesse sua conta</h1>
-  <p><input type="text" placeholder="Email" v-model="email"></p>
-  <p><input type="password" placeholder="Senha" v-model="password"></p>
-  <p v-if="errMsg">{{errMsg}}</p>
+  <p><input type="text" placeholder="Email" v-model="email" /></p>
+  <p><input type="password" placeholder="Senha" v-model="password" /></p>
+  <p v-if="errMsg">{{ errMsg }}</p>
   <p><button @click="logIn">Entrar</button></p>
   <p><button @click="logInWithGoogle">Entrar com Google</button></p>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { useRouter } from 'vue-router'
+import { defineComponent, ref } from "vue";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import { useRouter } from "vue-router";
+import { computed } from "@vue/reactivity";
+import { useDespesasStore } from "../store/index";
 
 export default defineComponent({
-  name: 'register-name',
-  data() {
-    return {
-      email: '',
-      password: '',
-      router: useRouter(),
-      errMsg: ''
-    }
-  },
-  methods: {
-    logIn() {
-      const auth = getAuth()
-      signInWithEmailAndPassword(auth, this.email, this.password)
+  name: "register-name",
+
+  setup() {
+    const email = ref("");
+    const password = ref("");
+    const router = ref(useRouter());
+    const errMsg = ref("");
+    const store = useDespesasStore();
+    const uid = computed(() => store.currentUid);
+
+    function logIn() {
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, email.value, password.value)
         .then((data) => {
-          console.log('Sucesso login');
-          console.log(auth.currentUser);
-          this.router.push('/');
+          console.log("Sucesso login");
+          store.setUid(auth.currentUser?.uid);
+          router.value.push("/");
         })
         .catch((error) => {
           console.log(error.code);
           switch (error.code) {
-            case 'auth/invalid-email':
-              this.errMsg = 'Email inválido'
+            case "auth/invalid-email":
+              errMsg.value = "Email inválido";
               break;
-            case 'auth/user-not-found':
-              this.errMsg = 'Nenhuma conta com esse email foi encontrada'
+            case "auth/user-not-found":
+              errMsg.value = "Nenhuma conta com esse email foi encontrada";
               break;
-            case 'auth/wrong-password':
-              this.errMsg = 'Senha incorreta'
+            case "auth/wrong-password":
+              errMsg.value = "Senha incorreta";
               break;
             default:
-              this.errMsg = 'Email ou senha incorretos'
+              errMsg.value = "Email ou senha incorretos";
               break;
           }
         });
-    },
-    logInWithGoogle() {
+    }
+
+    function logInWithGoogle() {
       const provider = new GoogleAuthProvider();
+      const auth = getAuth();
       signInWithPopup(getAuth(), provider)
         .then((result) => {
-          console.log(result.user.email);
-          this.router.push('/');
+          store.setUid(auth.currentUser?.uid);
+          router.value.push("/");
         })
         .catch((error) => {
           console.log(error.message);
-        })
+        });
     }
 
-  }
-})
+    return {
+      logIn,
+      logInWithGoogle,
+      errMsg,
+      password,
+      email,
+    };
+  },
+});
 </script>
 
-<style>
-
-</style>
+<style></style>
