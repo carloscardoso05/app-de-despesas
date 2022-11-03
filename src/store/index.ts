@@ -3,11 +3,11 @@ import { computed, ref } from "vue";
 import { userId } from "@/data/userData";
 
 export const useDespesasStore = defineStore("DespesasStore", () => {
-  const currentUid = ref("");
+  const currentUid = ref(userId);
   const yearSelect = ref("");
   const monthSelect = ref("");
   const datePath = computed(
-    () => `users/${userId}/${yearSelect.value}/${monthSelect.value}/`
+    () => `users/${currentUid.value}/${yearSelect.value}/${monthSelect.value}/`
   );
 
   function setYear(year: string) {

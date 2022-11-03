@@ -18,8 +18,9 @@
 </template>
 
 <script lang="ts">
+import { computed } from "@vue/reactivity";
 import { defineComponent, ref, onMounted } from "vue";
-import {getData, userId} from "../data/userData";
+import {getData} from "../data/userData";
 import { useDespesasStore } from "../store/index";
 
 export default defineComponent({
@@ -28,10 +29,11 @@ export default defineComponent({
   setup() {
     const yearsList = ref([] as string[]);
     const store = useDespesasStore();
-    const path = ref(`users/${userId}/`)
+    const userId = computed(() => store.currentUid)
+    const path = ref(`users/${userId.value}/`)
 
     onMounted(() => {
-      getData(path.value).then((result) => {
+      getData(path.value).then((result) => {  
         for (let year in result) {
           yearsList.value.push(year);
         }

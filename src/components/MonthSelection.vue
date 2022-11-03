@@ -20,7 +20,7 @@
 <script lang="ts">
 import { computed } from "@vue/reactivity";
 import { defineComponent, ref, watch } from "vue";
-import {getData, userId} from "../data/userData";
+import {getData} from "../data/userData";
 import { useDespesasStore } from "../store/index";
 
 export default defineComponent({
@@ -28,9 +28,10 @@ export default defineComponent({
 
   setup() {
     const store = useDespesasStore();
+    const userId = computed(() => store.currentUid)
     const yearSelect = computed(() => store.yearSelect);
     const monthsList = ref([] as string[]);
-    const path = computed(() => `users/${userId}/${yearSelect.value}/`)
+    const path = computed(() => `users/${userId.value}/${yearSelect.value}/`)
     const setMonth = store.setMonth
     
     watch([yearSelect], () => {
