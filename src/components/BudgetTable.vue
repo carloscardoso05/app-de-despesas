@@ -9,23 +9,7 @@
       </tr>
     </thead>
     <tbody class="table-group-divider">
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Larry the Bird</td>
-        <td>@twitter</td>
-      </tr>
+      <DayInfo v-for="day in daysList" :key="day" :dayTarget="day" />
     </tbody>
   </table>
 </template>
@@ -35,23 +19,33 @@ import { defineComponent, ref, onMounted, watch } from "vue";
 import { useDespesasStore } from "@/store";
 import { computed } from "@vue/reactivity";
 import { getData } from "@/data/userData";
+import DayInfo from "./DayInfo.vue"
 
 export default defineComponent({
   name: "budgetTable",
+  components:{DayInfo},
 
   setup() {
     const store = useDespesasStore();
     const datePath = computed(() => store.datePath);
+    const data = ref();
+    const daysList = ref([] as string[]);
+
 
     watch([datePath], () => {
       console.log(datePath.value);
       getData(datePath.value).then((result) => {
-        console.log(result);
+        data.value = result
+        daysList.value = [];
+        for (let day in result) {
+          daysList.value.push(day);
+        }
+        daysList.value.sort().reverse() // retirar o .reverse() se preferir os dias mais recentes primeiro
       });
     });
 
     return {
-      datePath,
+      daysList
     };
   },
 });
