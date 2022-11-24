@@ -2,18 +2,19 @@
   <table class="table table-bordered table-hover container rounded">
     <thead>
       <tr>
-        <th scope="col" colspan="2">
+        <th scope="col" colspan="4">
           <h4 class="text-center">Dia {{ dayTarget }}</h4>
         </th>
       </tr>
     </thead>
 
-    <tbody v-for="data in dayData" :key="data.descricao">
+    <tbody v-for="data in dayData" :key="data.id">
       <tr>
         <td>{{ capitalize(data.descricao) }}</td>
 
-        <td v-if="data.valor > 0">
+        <td>
           <svg
+            v-if="data.valor > 0"
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
@@ -25,11 +26,8 @@
               d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
             />
           </svg>
-          {{ formatMoney(data.valor) }}
-        </td>
-
-        <td v-else-if="data.valor < 0">
           <svg
+            v-else-if="data.valor < 0"
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
@@ -41,11 +39,8 @@
               d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"
             />
           </svg>
-          {{ formatMoney(data.valor) }}
-        </td>
-
-        <td v-else>
           <svg
+            v-else
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
@@ -59,6 +54,10 @@
           </svg>
           {{ formatMoney(data.valor) }}
         </td>
+
+        <td v-if="data.categoria">{{ capitalize(data.categoria) }}</td>
+
+        <td v-if="data.variacao">{{ capitalize(data.variacao) }}</td>
       </tr>
     </tbody>
   </table>
@@ -71,8 +70,11 @@ import { computed } from "@vue/reactivity";
 import { getData } from "@/data/userData";
 
 interface dayInfo {
+  id?: number;
   valor: number;
   descricao: string;
+  categoria?: string;
+  variacao?: string;
 }
 
 export default defineComponent({
@@ -94,25 +96,24 @@ export default defineComponent({
       });
     });
 
-    function capitalize(text:string){
+    function capitalize(text: string) {
       return text.charAt(0).toUpperCase() + text.slice(1);
     }
-    
+
     function formatMoney(number: number) {
-      let formated =  number.toString().replace('.', ',')
-      if (formated.includes('-') || formated.includes('+')){
-        formated = 'R$ ' + formated.slice(1)
+      let formated = number.toString().replace(".", ",");
+      if (formated.includes("-") || formated.includes("+")) {
+        formated = "R$ " + formated.slice(1);
+      } else {
+        formated = "R$ " + formated;
       }
-      else {
-        formated = 'R$ ' + formated
-      }
-      return formated
+      return formated;
     }
 
     return {
       dayData,
       formatMoney,
-      capitalize
+      capitalize,
     };
   },
 });

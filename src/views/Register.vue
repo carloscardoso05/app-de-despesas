@@ -30,7 +30,7 @@ export default defineComponent({
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, email.value, password.value)
         .then((data) => {
-          console.log("Sucesso registro");
+          console.log("Registro realizado com sucesso");
           store.setUid(auth.currentUser?.uid);
           router.value.push("/");
         })
@@ -45,6 +45,7 @@ export default defineComponent({
       const auth = getAuth();
       signInWithPopup(getAuth(), provider)
         .then((result) => {
+          console.log("Registro realizado com sucesso");
           console.log(result.user);
           store.setUid(auth.currentUser?.uid);
           router.value.push("/");

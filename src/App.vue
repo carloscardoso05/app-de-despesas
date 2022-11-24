@@ -22,6 +22,8 @@ export default defineComponent({
     
 
     function handleSignOut() {
+      console.log('Usuário deslogado');
+      
       signOut(auth.value).then(() => {
         router.push("/");
       });

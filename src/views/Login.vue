@@ -34,7 +34,7 @@ export default defineComponent({
       const auth = getAuth();
       signInWithEmailAndPassword(auth, email.value, password.value)
         .then((data) => {
-          console.log("Sucesso login");
+          console.log("Login realizado com sucesso");
           store.setUid(auth.currentUser?.uid);
           router.value.push("/");
         })
@@ -62,6 +62,9 @@ export default defineComponent({
       const auth = getAuth();
       signInWithPopup(getAuth(), provider)
         .then((result) => {
+          console.log("Login realizado com sucesso");
+          console.log("Current User:", result.user.uid);
+          
           store.setUid(auth.currentUser?.uid);
           router.value.push("/");
         })

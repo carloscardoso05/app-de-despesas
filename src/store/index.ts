@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { userId } from "@/data/userData";
+import { getAuth } from "firebase/auth";
+const userId = getAuth().currentUser?.uid
 
 export const useDespesasStore = defineStore("DespesasStore", () => {
   const currentUid = ref(userId);

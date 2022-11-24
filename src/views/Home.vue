@@ -1,4 +1,8 @@
 <template>
+  <button class="btn btn-primary">
+    <router-link to="/add" class="text-white">Adicionar gasto/ganho</router-link>
+  </button>
+
   <h1>Home</h1>
 
   <YearSelection />
@@ -16,7 +20,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "HomeView",
-  components: { YearSelection, MonthSelection, BudgetTable}
+  components: { YearSelection, MonthSelection, BudgetTable },
 });
 </script>
 
