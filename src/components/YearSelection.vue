@@ -1,5 +1,5 @@
 <template>
-  <div class="btn-group" role="group">
+  <div v-if="yearsList.length != 0" class="btn-group" role="group">
     <div v-for="year in yearsList" :key="year">
       <input
         type="radio"
@@ -14,6 +14,12 @@
         {{ year }}
       </label>
     </div>
+  </div>
+
+  <div v-else class="container w-75">
+    <h3 class="alert alert-danger text-center">
+      Você ainda não tem nem uma informação adicionada ainda
+    </h3>
   </div>
 </template>
 
