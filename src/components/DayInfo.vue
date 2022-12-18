@@ -2,98 +2,115 @@
   <table class="table table-bordered table-hover container rounded">
     <thead>
       <tr>
-        <th scope="col" colspan="4">
+        <th scope="col" colspan="3">
           <h4 class="text-center">Dia {{ dayTarget }}</h4>
         </th>
       </tr>
     </thead>
 
     <tbody v-for="data in dayData" :key="data.id">
-      <tr>
-        <td>{{ capitalize(data.descricao) }}</td>
-
+      <tr class="day-row">
         <td>
-          <svg
-            v-if="data.valor > 0"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-plus-circle-fill text-success"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"
-            />
-          </svg>
-          <svg
-            v-else-if="data.valor < 0"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-dash-circle-fill text-danger"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"
-            />
-          </svg>
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-slash-circle-fill text-muted"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.646-2.646a.5.5 0 0 0-.708-.708l-6 6a.5.5 0 0 0 .708.708l6-6z"
-            />
-          </svg>
-          {{ formatMoney(data.valor) }}
+          <p class="descricao">{{ capitalize(data.descricao) }}</p>
+          <p class="valor">
+            <ValueIcon :valor="data.valor" />
+            {{ formatMoney(data.valor) }}
+          </p>
         </td>
 
-        <td v-if="data.categoria">{{ capitalize(data.categoria) }}</td>
+        <td>
+          <p v-if="data.categoria">{{ capitalize(data.categoria) }}</p>
+          <p v-else>Categoria: nenhuma</p>
+        </td>
 
-        <td v-if="data.variacao">{{ capitalize(data.variacao) }}</td>
+        <!-- <td v-if="data.variacao" class="border-end-0">
+          {{ capitalize(data.variacao) }}
+        </td> -->
+
+        <td class="action-buttons border-start-0">
+          <abbr title="Editar">
+            <button type="button" class="btn btn-success">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-pencil-square"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                ></path>
+              </svg>
+            </button>
+          </abbr>
+
+          <abbr title="Apagar">
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="apagar(data.id)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-trash text-white"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+                ></path>
+              </svg>
+            </button>
+          </abbr>
+        </td>
       </tr>
     </tbody>
   </table>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { useDespesasStore } from "@/store";
 import { computed } from "@vue/reactivity";
-import { getData } from "@/data/userData";
+import ValueIcon from "./ValueIcon.vue";
 
 interface dayInfo {
-  id?: number;
+  id: number;
   valor: number;
   descricao: string;
   categoria?: string;
-  variacao?: string;
 }
 
 export default defineComponent({
   name: "dayInfo",
   props: {
-    dayTarget: String,
+    dayTarget: {
+      required: true,
+      type: String
+    }
   },
+  components: { ValueIcon },
 
   setup(props) {
     const store = useDespesasStore();
-    const datePath = computed(() => store.datePath);
     const dayData = ref([] as dayInfo[]);
+    const dataPath = computed(() => store.userData[store.yearSelect][store.monthSelect][props.dayTarget])
 
     onMounted(() => {
-      getData(datePath.value + `${props.dayTarget}/`).then((result) => {
-        for (let data in result) {
-          dayData.value.push(result[data]);
-        }
-      });
+      for (let data in dataPath.value) {
+        dayData.value.push(dataPath.value[data]);
+      }
     });
 
     function capitalize(text: string) {
@@ -110,13 +127,35 @@ export default defineComponent({
       return formated;
     }
 
+    function apagar(id: number) {
+      console.log("Apagado com sucesso");
+    }
+
     return {
       dayData,
       formatMoney,
       capitalize,
+      apagar,
     };
   },
 });
 </script>
 
-<style></style>
+<style scoped>
+.descricao {
+  font-size: large;
+  font-weight: 500;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.day-row {
+  display: grid;
+  grid-template-columns: 3fr 3fr 1fr;
+}
+</style>

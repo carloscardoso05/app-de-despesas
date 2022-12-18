@@ -15,13 +15,11 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useRouter } from "vue-router";
-import { useDespesasStore } from "../store/index";
 
 export default defineComponent({
   name: "register-name",
 
   setup() {
-    const store = useDespesasStore();
     const email = ref("");
     const password = ref();
     const router = ref(useRouter());
@@ -31,7 +29,6 @@ export default defineComponent({
       createUserWithEmailAndPassword(auth, email.value, password.value)
         .then((data) => {
           console.log("Registro realizado com sucesso");
-          store.setUid(auth.currentUser?.uid);
           router.value.push("/");
         })
         .catch((error) => {
@@ -42,12 +39,10 @@ export default defineComponent({
 
     function logInWithGoogle() {
       const provider = new GoogleAuthProvider();
-      const auth = getAuth();
       signInWithPopup(getAuth(), provider)
         .then((result) => {
           console.log("Registro realizado com sucesso");
           console.log(result.user);
-          store.setUid(auth.currentUser?.uid);
           router.value.push("/");
         })
         .catch((error) => {

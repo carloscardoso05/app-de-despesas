@@ -3,10 +3,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { useDespesasStore } from "@/store";
 import { computed } from "@vue/reactivity";
-import { getData } from "@/data/userData";
+import { query, where, getDocs } from "firebase/firestore";
 import DayInfo from "./DayInfo.vue";
 
 export default defineComponent({
@@ -15,20 +15,16 @@ export default defineComponent({
 
   setup() {
     const store = useDespesasStore();
-    const datePath = computed(() => store.datePath);
-    const data = ref();
+    const monthSelect = computed(() => store.monthSelect);
+    const dataPath = computed(
+      () => store.userData[store.yearSelect][store.monthSelect]
+    );
     const daysList = ref([] as string[]);
 
-    watch([datePath], () => {
-      console.log(datePath.value);
-      getData(datePath.value).then((result) => {
-        data.value = result;
-        daysList.value = [];
-        for (let day in result) {
-          daysList.value.push(day);
-        }
-        daysList.value.sort().reverse(); // retirar o .reverse() se preferir os dias mais recentes primeiro
-      });
+    watch([monthSelect], async () => {
+      daysList.value = [];
+      Object.keys(dataPath.value).forEach((day) => daysList.value.push(day))
+      daysList.value.sort().reverse(); // retirar o .reverse() se preferir os dias mais antigos primeiro
     });
 
     return {

@@ -5,7 +5,8 @@ import router from "./router";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
 
-import { getDatabase } from "firebase/database";
+
+import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -18,7 +19,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getDatabase(app);
+export const db = getFirestore(app);
 
 const pinia = createPinia();
 

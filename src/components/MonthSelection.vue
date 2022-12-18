@@ -20,35 +20,32 @@
 <script lang="ts">
 import { computed } from "@vue/reactivity";
 import { defineComponent, ref, watch } from "vue";
-import {getData} from "../data/userData";
 import { useDespesasStore } from "../store/index";
+import { query, where, getDocs } from "firebase/firestore";
 
 export default defineComponent({
   name: "monthSelection",
 
   setup() {
     const store = useDespesasStore();
-    const userId = computed(() => store.currentUid)
     const yearSelect = computed(() => store.yearSelect);
+    const dataPath = computed(() => store.userData[store.yearSelect]);
     const monthsList = ref([] as string[]);
-    const path = computed(() => `users/${userId.value}/${yearSelect.value}/`)
-    const setMonth = store.setMonth
-    
-    watch([yearSelect], () => {
-      getData(path.value).then((result) => {
-        monthsList.value = []
-        for (let month in result) {
-          monthsList.value.push(month);
-        }
-        monthsList.value.sort()
-        setMonth(monthsList.value[0])
-      });
+
+    watch([yearSelect], async () => {
+      monthsList.value = [];
+      Object.keys(dataPath.value).forEach((month) => monthsList.value.push(month))
+      monthsList.value.sort();
+      setMonth(monthsList.value[0]);
     });
 
+    function setMonth(month: string): void {
+      store.monthSelect = month;
+    }
 
     return {
       monthsList,
-      setMonth
+      setMonth,
     };
   },
 });

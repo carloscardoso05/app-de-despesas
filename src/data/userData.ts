@@ -1,9 +1,16 @@
-import { ref, get, set, push, getDatabase } from "firebase/database";
-import { getAuth } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/main";
 
-export async function getData(path: string) {
-  const db = getDatabase();
-  const snapshot = await get(ref(db, path));
-  const userData = snapshot.val();
-  return userData;
+export async function getUserData(userId: string) {
+  const docRef = doc(db, "users", userId);
+  const docSnap = await getDoc(docRef);
+  
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+    return docSnap.data()
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+    return
+  }
 }

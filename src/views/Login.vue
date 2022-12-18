@@ -15,9 +15,11 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
-import { computed } from "@vue/reactivity";
 import { useDespesasStore } from "../store/index";
+import { getUserData} from "../data/userData"
+
 
 export default defineComponent({
   name: "register-name",
@@ -35,7 +37,8 @@ export default defineComponent({
       signInWithEmailAndPassword(auth, email.value, password.value)
         .then((data) => {
           console.log("Login realizado com sucesso");
-          store.setUid(auth.currentUser?.uid);
+          getUserData(uid.value).then((result) => store.userData = result).catch((e) => console.log(e)) 
+          store.currentUid = auth.currentUser?.uid as string
           router.value.push("/");
         })
         .catch((error) => {
@@ -64,8 +67,9 @@ export default defineComponent({
         .then((result) => {
           console.log("Login realizado com sucesso");
           console.log("Current User:", result.user.uid);
-          
-          store.setUid(auth.currentUser?.uid);
+
+          getUserData(uid.value).then((result) => store.userData = result).catch((e) => console.log(e)) 
+          store.currentUid = auth.currentUser?.uid as string
           router.value.push("/");
         })
         .catch((error) => {
