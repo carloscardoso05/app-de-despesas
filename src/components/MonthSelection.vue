@@ -21,7 +21,6 @@
 import { computed } from "@vue/reactivity";
 import { defineComponent, ref, watch } from "vue";
 import { useDespesasStore } from "../store/index";
-import { query, where, getDocs } from "firebase/firestore";
 
 export default defineComponent({
   name: "monthSelection",
@@ -32,7 +31,7 @@ export default defineComponent({
     const dataPath = computed(() => store.userData[store.yearSelect]);
     const monthsList = ref([] as string[]);
 
-    watch([yearSelect], async () => {
+    watch([yearSelect,], () => {
       monthsList.value = [];
       Object.keys(dataPath.value).forEach((month) => monthsList.value.push(month))
       monthsList.value.sort();

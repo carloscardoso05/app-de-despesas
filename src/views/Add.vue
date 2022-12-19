@@ -77,18 +77,26 @@ export default defineComponent({
       };
     });
 
+    // const updateObject = computed(() => {
+    //   return {
+    //     [ano.value]: {
+    //       [mes.value]: {
+    //         [dia.value]: arrayUnion(dataObj.value),
+    //       },
+    //     },
+    //   };
+    // });
+
     const updateObject = computed(() => {
       return {
-        [ano.value]: {
-          [mes.value]: {
-            [dia.value]: arrayUnion(dataObj.value),
-          },
-        },
+        [`${ano.value}.${mes.value}.${dia.value}`]: arrayUnion(dataObj.value),
       };
     });
 
     async function add() {
       const docRef = doc(db, "users", userId.value);
+
+      console.log(`${ano.value}.${mes.value}.${dia.value}`);
 
       await updateDoc(docRef, updateObject.value);
       date.value = "";

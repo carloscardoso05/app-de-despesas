@@ -16,14 +16,14 @@ export const useDespesasStore = defineStore("DespesasStore", () => {
   const currentUid = ref(userId);
   const yearSelect = ref("");
   const monthSelect = ref("");
-  const datePath = computed(
-    () => `users/${currentUid.value}/${yearSelect.value}/${monthSelect.value}/`
-  );
+  // const datePath = computed(
+  //   () => `users/${currentUid.value}/${yearSelect.value}/${monthSelect.value}/`
+  // );
 
   return {
     yearSelect,
     monthSelect,
-    datePath,
+    // datePath,
     currentUid,
     userData,
     userCollection

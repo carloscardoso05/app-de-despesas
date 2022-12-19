@@ -6,7 +6,6 @@
 import { defineComponent, ref, watch } from "vue";
 import { useDespesasStore } from "@/store";
 import { computed } from "@vue/reactivity";
-import { query, where, getDocs } from "firebase/firestore";
 import DayInfo from "./DayInfo.vue";
 
 export default defineComponent({
@@ -16,12 +15,13 @@ export default defineComponent({
   setup() {
     const store = useDespesasStore();
     const monthSelect = computed(() => store.monthSelect);
+    const yearSelect = computed(() => store.yearSelect);
     const dataPath = computed(
       () => store.userData[store.yearSelect][store.monthSelect]
     );
     const daysList = ref([] as string[]);
 
-    watch([monthSelect], async () => {
+    watch([monthSelect, yearSelect], () => {
       daysList.value = [];
       Object.keys(dataPath.value).forEach((day) => daysList.value.push(day))
       daysList.value.sort().reverse(); // retirar o .reverse() se preferir os dias mais antigos primeiro

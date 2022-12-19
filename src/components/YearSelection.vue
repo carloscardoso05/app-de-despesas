@@ -25,9 +25,8 @@
 
 <script lang="ts">
 import { computed } from "@vue/reactivity";
-import { defineComponent, ref, watch, onMounted } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { useDespesasStore } from "../store/index";
-import { getUserData } from "@/data/userData";
 
 export default defineComponent({
   name: "YearSelection",
@@ -37,7 +36,7 @@ export default defineComponent({
     const store = useDespesasStore();
     const userData = computed(() => store.userData);
 
-    watch([userData], async () => {
+    watch([userData], () => {
       yearsList.value = [];
       Object.keys(userData.value).forEach((year) => yearsList.value.push(year))
       yearsList.value.sort();

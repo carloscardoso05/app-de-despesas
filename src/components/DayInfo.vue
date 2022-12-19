@@ -50,11 +50,7 @@
           </abbr>
 
           <abbr title="Apagar">
-            <button
-              type="button"
-              class="btn btn-danger"
-              @click="apagar(data.id)"
-            >
+            <button type="button" class="btn btn-danger" @click="apagar(data)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -83,6 +79,8 @@
 import { defineComponent, ref, onMounted } from "vue";
 import { useDespesasStore } from "@/store";
 import { computed } from "@vue/reactivity";
+import { arrayRemove, doc, updateDoc } from "@firebase/firestore";
+import { db } from "@/main";
 import ValueIcon from "./ValueIcon.vue";
 
 interface dayInfo {
@@ -97,15 +95,20 @@ export default defineComponent({
   props: {
     dayTarget: {
       required: true,
-      type: String
-    }
+      type: String,
+    },
   },
   components: { ValueIcon },
 
   setup(props) {
     const store = useDespesasStore();
+    const yearSelect = computed(() => store.yearSelect).value;
+    const monthSelect = computed(() => store.monthSelect).value;
+    const userId = computed(() => store.currentUid).value;
     const dayData = ref([] as dayInfo[]);
-    const dataPath = computed(() => store.userData[store.yearSelect][store.monthSelect][props.dayTarget])
+    const dataPath = computed(
+      () => store.userData[store.yearSelect][store.monthSelect][props.dayTarget]
+    );
 
     onMounted(() => {
       for (let data in dataPath.value) {
@@ -127,7 +130,21 @@ export default defineComponent({
       return formated;
     }
 
-    function apagar(id: number) {
+    async function apagar(data: object) {
+      const deleteObject = computed(() => {
+        return {
+          [yearSelect]: {
+            [monthSelect]: {
+              [props.dayTarget]: arrayRemove(data),
+            },
+          },
+        };
+      });
+
+      const docRef = doc(db, "users", userId);
+
+      await updateDoc(docRef, deleteObject.value);
+
       console.log("Apagado com sucesso");
     }
 
