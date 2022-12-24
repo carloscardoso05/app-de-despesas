@@ -82,6 +82,8 @@ import { computed } from "@vue/reactivity";
 import { arrayRemove, doc, updateDoc } from "@firebase/firestore";
 import { db } from "@/main";
 import ValueIcon from "./ValueIcon.vue";
+import { getUserData} from "../data/userData"
+
 
 interface dayInfo {
   id: number;
@@ -102,13 +104,14 @@ export default defineComponent({
 
   setup(props) {
     const store = useDespesasStore();
-    const yearSelect = computed(() => store.yearSelect).value;
-    const monthSelect = computed(() => store.monthSelect).value;
-    const userId = computed(() => store.currentUid).value;
+    const yearSelect = computed(() => store.yearSelect);
+    const monthSelect = computed(() => store.monthSelect);
+    const userId = computed(() => store.currentUid);
     const dayData = ref([] as dayInfo[]);
     const dataPath = computed(
       () => store.userData[store.yearSelect][store.monthSelect][props.dayTarget]
     );
+    const uid = computed(() => store.currentUid)
 
     onMounted(() => {
       for (let data in dataPath.value) {
@@ -131,19 +134,17 @@ export default defineComponent({
     }
 
     async function apagar(data: object) {
+      const docRef = doc(db, "users", userId.value);
+      
       const deleteObject = computed(() => {
         return {
-          [yearSelect]: {
-            [monthSelect]: {
-              [props.dayTarget]: arrayRemove(data),
-            },
-          },
+          [`${yearSelect.value}.${monthSelect.value}.${props.dayTarget}`]: arrayRemove(data),
         };
       });
 
-      const docRef = doc(db, "users", userId);
-
       await updateDoc(docRef, deleteObject.value);
+
+      getUserData(uid.value).then((result) => store.userData = result).catch((e) => console.log(e)) 
 
       console.log("Apagado com sucesso");
     }
@@ -152,7 +153,7 @@ export default defineComponent({
       dayData,
       formatMoney,
       capitalize,
-      apagar,
+      apagar
     };
   },
 });

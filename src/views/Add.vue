@@ -1,6 +1,6 @@
 <template>
   <h1>Adicionar movimentação</h1>
-  <form class="form container">
+  <form class="form container" id="form">
     <label for="date-input" class="form-label">Data</label>
     <input type="date" class="form-control" id="date-input" v-model="date" />
 
@@ -45,6 +45,8 @@ import { computed, defineComponent, ref } from "vue";
 import { useDespesasStore } from "../store/index";
 import { db } from "@/main";
 import { arrayUnion, updateDoc, doc } from "firebase/firestore";
+import { getUserData} from "../data/userData"
+
 
 export default defineComponent({
   name: "AddPage",
@@ -64,6 +66,7 @@ export default defineComponent({
     const valor = ref(0);
     const descricao = ref("");
     const categoria = ref("");
+    const uid = computed(() => store.currentUid)
 
     const store = useDespesasStore();
     const userId = computed(() => store.currentUid);
@@ -76,16 +79,6 @@ export default defineComponent({
         categoria: categoria.value,
       };
     });
-
-    // const updateObject = computed(() => {
-    //   return {
-    //     [ano.value]: {
-    //       [mes.value]: {
-    //         [dia.value]: arrayUnion(dataObj.value),
-    //       },
-    //     },
-    //   };
-    // });
 
     const updateObject = computed(() => {
       return {
@@ -102,7 +95,10 @@ export default defineComponent({
       date.value = "";
       descricao.value = "";
       categoria.value = "";
-      valor.value = 0;
+      valor.value = 0
+
+      getUserData(uid.value).then((result) => store.userData = result).catch((e) => console.log(e)) 
+
       console.log("Adicionado com sucesso");
     }
 
@@ -112,7 +108,7 @@ export default defineComponent({
       descricao,
       categoria,
       date,
-      add,
+      add
     };
   },
 });

@@ -16,12 +16,13 @@ export default defineComponent({
     const store = useDespesasStore();
     const monthSelect = computed(() => store.monthSelect);
     const yearSelect = computed(() => store.yearSelect);
+    const userData = computed(() => store.userData);
     const dataPath = computed(
       () => store.userData[store.yearSelect][store.monthSelect]
     );
     const daysList = ref([] as string[]);
 
-    watch([monthSelect, yearSelect], () => {
+    watch([monthSelect, yearSelect, userData], () => {
       daysList.value = [];
       Object.keys(dataPath.value).forEach((day) => daysList.value.push(day))
       daysList.value.sort().reverse(); // retirar o .reverse() se preferir os dias mais antigos primeiro

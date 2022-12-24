@@ -35,12 +35,14 @@ export default defineComponent({
     const yearsList = ref([] as string[]);
     const store = useDespesasStore();
     const userData = computed(() => store.userData);
+    let exec = false
 
     watch([userData], () => {
       yearsList.value = [];
       Object.keys(userData.value).forEach((year) => yearsList.value.push(year))
       yearsList.value.sort();
-      setYear(yearsList.value[0]);
+      if (exec === false) {setYear(yearsList.value[0])}
+      exec = true
     });
 
     function setYear(year: string): void {
