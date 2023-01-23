@@ -1,4 +1,4 @@
-# despesas
+# app de despesas
 
 ## Project setup
 ```
